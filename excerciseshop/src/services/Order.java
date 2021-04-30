@@ -64,12 +64,20 @@ public class Order {
 		}
 		return sum;
 	}
+	
+	public String priceTags() {
+		String dados = "";
+		for (OrderItem i : item) {
+			dados += i.getProduct().priceTag();
+		}
+		return dados;
+	}
 //toString
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Order moment: "+sdf.format(moment)+"\n");
 		sb.append("Order status: "+status+"\n");
-		sb.append("Client:"+client+"\n");
+		sb.append("Client: "+client+"\n");
 		sb.append("Order Items:\n");
 		for (OrderItem i : item) {
 			sb.append(i+"\n");

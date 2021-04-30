@@ -7,7 +7,9 @@ import java.util.Locale;
 import java.util.Scanner;
 
 import entitties.Client;
+import entitties.ImportedProduct;
 import entitties.Product;
+import entitties.UsedProduct;
 import services.Order;
 import services.OrderItem;
 import services.OrderStatus;
@@ -42,6 +44,8 @@ public class Program {
 		
 		for (int i=0; i<n; i++) {
 			System.out.println("Enter #"+ (i+1) +" item data:");
+			System.out.print("Common, used or imported (c/u/i)? ");
+			char type = sc.next().charAt(0); 
 			System.out.print("Product name: ");
 			sc.nextLine();
 			String productName = sc.nextLine();
@@ -50,15 +54,36 @@ public class Program {
 			System.out.print("Quantity: ");
 			int quantity = sc.nextInt();
 			
-			Product product = new Product(productName, productPrice);
-			
-			OrderItem it = new OrderItem(quantity, productPrice, product);
-			
-			order.addItem(it);
+
+			if(type == 'u') {
+				System.out.print("Manufacture date (DD/MM/YYYY): ");
+				Date date = sdf.parse(sc.next());
+				
+				Product product = new UsedProduct(productName, productPrice, date);
+				OrderItem it = new OrderItem(quantity, productPrice, product);
+				order.addItem(it);
+		
+			} else if(type == 'i') {
+				System.out.print("Customs fee: ");
+				double customFee = sc.nextDouble();
+				
+				Product product = new ImportedProduct(productName, productPrice, customFee);
+				OrderItem it = new OrderItem(quantity, (productPrice+customFee), product);
+				order.addItem(it);
+			}else {
+				
+				Product product = new Product(productName, productPrice);
+				OrderItem it = new OrderItem(quantity, productPrice, product);
+				order.addItem(it);
+			}
+									
 		}
 		
 		System.out.println();
 		System.out.println(order);
+		System.out.println();
+		System.out.println("PRICE TAGS");
+		System.out.println(order.priceTags());
 		
 	sc.close();
 	}
